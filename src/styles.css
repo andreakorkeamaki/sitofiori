@@ -30,6 +30,10 @@ a:hover {
   transform: translateY(-1px);
 }
 
+button {
+  font: inherit;
+}
+
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -137,6 +141,43 @@ a:hover {
   border: 1px solid rgba(111, 132, 108, 0.35);
   background: #ffffff;
   color: #4d614b;
+}
+
+.language-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0.25rem;
+  backdrop-filter: blur(14px);
+}
+
+.language-toggle button {
+  min-width: 2.45rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0.65rem 0.75rem;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.language-toggle button:hover {
+  transform: translateY(-1px);
+}
+
+.language-toggle button.is-active {
+  background: #fffaf4;
+  color: #7b2636;
 }
 
 .image-card {
