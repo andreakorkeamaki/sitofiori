@@ -769,7 +769,7 @@ button:focus-visible {
 
 .gallery-drag-hint {
   position: absolute;
-  right: clamp(1rem, 3vw, 2.75rem);
+  left: 50%;
   bottom: 0.35rem;
   display: flex;
   align-items: center;
@@ -780,6 +780,8 @@ button:focus-visible {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .gallery-drag-hint span {
@@ -1041,7 +1043,6 @@ button:focus-visible {
   }
 
   .gallery-drag-hint {
-    right: 1rem;
     bottom: 0.2rem;
     font-size: 0.66rem;
   }
