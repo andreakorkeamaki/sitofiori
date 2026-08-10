@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -9,19 +9,47 @@ const mapsUrl =
   "https://www.google.com/maps/search/?api=1&query=Fiorilandia%20di%20Sanna%20Stefania%20Via%20Francesco%20Baracca%207%2Fd%20Viterbo";
 
 const images = {
-  hero:
-    "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1800&q=88",
+  hero: "/images/fiorilandia-hero.webp",
+  contact: "/images/fiorilandia-contact.webp",
   workbench:
     "https://images.unsplash.com/photo-1487070183336-b863922373d4?auto=format&fit=crop&w=1200&q=84",
-  bouquet:
-    "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=1000&q=84",
-  roses:
-    "https://images.unsplash.com/photo-1494972308805-463bc619d34e?auto=format&fit=crop&w=1000&q=84",
-  seasonal:
-    "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1000&q=84",
-  delivery:
-    "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=1000&q=84",
+  bouquet: "/images/fiorilandia-service.webp",
+  seasonal: "/images/fiorilandia-seasonal.webp",
+  delivery: "/images/fiorilandia-delivery.webp",
 };
+
+const galleryPhoto = (id) => `/images/gallery/${id}.webp`;
+
+const galleryCategoryDefinitions = [
+  {
+    key: "bouquets",
+    cover: galleryPhoto("042"),
+    photos: [
+      "001", "002", "003", "011", "012", "016", "017", "020", "021", "022", "023", "024", "033",
+      "035", "036", "038", "040", "041", "042", "044", "045", "050", "051", "052", "053",
+      "056", "058", "059", "061", "063", "064", "065", "066", "067", "068", "069", "070",
+      "071", "072", "073", "074", "075", "076", "078", "079", "080", "081", "082",
+    ].map(galleryPhoto),
+  },
+  {
+    key: "arrangements",
+    cover: galleryPhoto("043"),
+    photos: [
+      "004", "005", "006", "008", "009", "010", "013", "014", "018", "025", "026", "027",
+      "028", "031", "034", "039", "043", "047", "048", "049", "060", "062", "077", "083",
+    ].map(galleryPhoto),
+  },
+  {
+    key: "weddings",
+    cover: galleryPhoto("089"),
+    photos: ["019", "046", "054", "055", "084", "085", "086", "087", "088", "089"].map(galleryPhoto),
+  },
+  {
+    key: "plants",
+    cover: galleryPhoto("032"),
+    photos: ["007", "015", "029", "030", "032", "037", "057"].map(galleryPhoto),
+  },
+];
 
 const copy = {
   it: {
@@ -35,7 +63,7 @@ const copy = {
       call: "Chiama 0761 344066",
       directions: "Indicazioni",
       note: "Tutto comincia da una domanda semplice: per chi sono questi fiori?",
-      imageAlt: "Bouquet naturale su banco da fiorista con atmosfera calda",
+      imageAlt: "Composizioni floreali rosa realizzate da Fiorilandia",
     },
     introCards: [
       ["Dal 1997", "Una piccola bottega di Viterbo che accompagna ricorrenze, sorprese e gesti quotidiani."],
@@ -49,7 +77,13 @@ const copy = {
         "Fiorilandia nasce dall'idea di una terra dei fiori: una bottega semplice, curata e personale dove scegliere un omaggio floreale con calma. Stefania segue direttamente il negozio, ascolta la richiesta e prepara ogni composizione con attenzione.",
       imageAlt: "Interno luminoso di una fioreria con fiori freschi",
     },
-    gallery: ["Carta kraft", "Bouquet naturale", "Fiori di stagione", "Bottega floreale"],
+    gallery: {
+      labels: ["Bouquet su misura", "Composizioni floreali", "Matrimoni e cerimonie", "Piante e coroncine"],
+      eyebrow: "Le creazioni di Fiorilandia",
+      open: "Apri la raccolta",
+      close: "Chiudi la galleria",
+      photoCount: "foto",
+    },
     servicesIntro: {
       eyebrow: "Quello che puoi chiedere",
       title: "Un bouquet, una corona, un pensiero da far arrivare",
@@ -132,7 +166,7 @@ const copy = {
       directions: "Indicazioni",
       maps: "Apri su Google Maps",
       info: "Richiedi informazioni",
-      imageAlt: "Dettaglio di fiori freschi su fondo naturale",
+      imageAlt: "Grande composizione floreale realizzata da Fiorilandia",
     },
   },
   en: {
@@ -146,7 +180,7 @@ const copy = {
       call: "Call 0761 344066",
       directions: "Directions",
       note: "It all starts with a simple question: who are these flowers for?",
-      imageAlt: "Natural bouquet on a flower shop workbench with a warm atmosphere",
+      imageAlt: "Pink floral arrangements created by Fiorilandia",
     },
     introCards: [
       ["Since 1997", "A small Viterbo flower shop for celebrations, surprises and everyday gestures."],
@@ -160,7 +194,13 @@ const copy = {
         "Fiorilandia comes from the idea of a land of flowers: a simple, carefully kept and personal shop where people can choose a floral gift at their own pace. Stefania runs the shop directly, listens to each request and prepares every arrangement with care.",
       imageAlt: "Bright flower shop interior with fresh flowers",
     },
-    gallery: ["Kraft paper", "Natural bouquet", "Seasonal flowers", "Flower shop"],
+    gallery: {
+      labels: ["Made-to-order bouquets", "Floral arrangements", "Weddings and ceremonies", "Plants and wreaths"],
+      eyebrow: "Fiorilandia creations",
+      open: "Open collection",
+      close: "Close gallery",
+      photoCount: "photos",
+    },
     servicesIntro: {
       eyebrow: "What you can ask for",
       title: "A bouquet, a laurel wreath, a thoughtful gift delivered",
@@ -243,7 +283,7 @@ const copy = {
       directions: "Directions",
       maps: "Open in Google Maps",
       info: "Request information",
-      imageAlt: "Detail of fresh flowers on a natural background",
+      imageAlt: "Large floral arrangement created by Fiorilandia",
     },
   },
 };
@@ -320,7 +360,7 @@ function App() {
       <Hero t={t.hero} />
       <Highlights cards={t.introCards} />
       <StorySection t={t.story} />
-      <GalleryMarquee labels={t.gallery} />
+      <GalleryMarquee t={t.gallery} />
       <ServicesSection intro={t.servicesIntro} services={t.services} />
       <GuideSection t={t.guide} />
       <SeasonalitySection t={t.seasonality} />
@@ -379,7 +419,12 @@ function Header({ isScrolled, locale, setLocale, t }) {
 function Hero({ t }) {
   return (
     <section id="top" className="hero-section relative overflow-hidden text-white">
-      <img className="hero-media absolute inset-0 h-full w-full object-cover" src={images.hero} alt={t.imageAlt} />
+      <img
+        className="hero-media absolute inset-0 h-full w-full object-cover"
+        src={images.hero}
+        alt={t.imageAlt}
+        fetchPriority="high"
+      />
       <div className="hero-shade absolute inset-0" />
       <div className="hero-inner relative z-10 mx-auto flex max-w-7xl flex-col justify-end px-5 pb-12 pt-28 sm:px-8 lg:pb-16">
         <div className="max-w-3xl">
@@ -447,22 +492,116 @@ function StorySection({ t }) {
   );
 }
 
-function GalleryMarquee({ labels }) {
-  const sources = [images.delivery, images.bouquet, images.seasonal, images.workbench];
-  const galleryItems = labels.map((label, index) => [label, sources[index]]);
+function GalleryMarquee({ t }) {
+  const [activeCategoryKey, setActiveCategoryKey] = useState(null);
+  const closeButtonRef = useRef(null);
+  const lastTriggerRef = useRef(null);
+  const galleryItems = galleryCategoryDefinitions.map((category, index) => ({
+    ...category,
+    label: t.labels[index],
+  }));
   const loopItems = [...galleryItems, ...galleryItems];
+  const activeCategory = galleryItems.find((category) => category.key === activeCategoryKey);
+
+  const closeGallery = () => {
+    setActiveCategoryKey(null);
+    window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (!activeCategory) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setActiveCategoryKey(null);
+        window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    window.requestAnimationFrame(() => closeButtonRef.current?.focus());
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeCategoryKey]);
 
   return (
-    <section className="overflow-hidden border-y border-leaf/14 bg-ivory py-8">
-      <div className="marquee-track">
-        {loopItems.map(([label, src], index) => (
-          <figure className="marquee-item" key={`${label}-${index}`} aria-hidden={index >= galleryItems.length}>
-            <img src={src} alt={index < galleryItems.length ? label : ""} />
-            <figcaption>{label}</figcaption>
-          </figure>
-        ))}
-      </div>
-    </section>
+    <>
+      <section className="overflow-hidden border-y border-leaf/14 bg-ivory py-8">
+        <div className="marquee-track">
+          {loopItems.map((category, index) => {
+            const isDuplicate = index >= galleryItems.length;
+
+            return (
+              <button
+                aria-haspopup="dialog"
+                aria-hidden={isDuplicate || undefined}
+                aria-label={`${t.open}: ${category.label}`}
+                className="marquee-item gallery-category-card"
+                key={`${category.key}-${index}`}
+                onClick={(event) => {
+                  lastTriggerRef.current = event.currentTarget;
+                  setActiveCategoryKey(category.key);
+                }}
+                tabIndex={isDuplicate ? -1 : 0}
+                type="button"
+              >
+                <img src={category.cover} alt="" />
+                <span className="gallery-count">{category.photos.length} {t.photoCount}</span>
+                <span className="marquee-caption">{category.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {activeCategory && (
+        <div
+          className="gallery-modal"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeGallery();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="gallery-modal-title"
+        >
+          <div className="gallery-modal-panel">
+            <header className="gallery-modal-header">
+              <div>
+                <p className="eyebrow">{t.eyebrow}</p>
+                <h2 id="gallery-modal-title">{activeCategory.label}</h2>
+                <p>{activeCategory.photos.length} {t.photoCount}</p>
+              </div>
+              <button
+                aria-label={t.close}
+                className="gallery-modal-close"
+                onClick={closeGallery}
+                ref={closeButtonRef}
+                type="button"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </header>
+            <div className="gallery-modal-grid">
+              {activeCategory.photos.map((src, index) => (
+                <figure key={src}>
+                  <img
+                    src={src}
+                    alt={`${activeCategory.label} ${index + 1}`}
+                    decoding="async"
+                    loading="lazy"
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -618,14 +757,16 @@ function DeliverySection({ t }) {
 
 function ContactSection({ t }) {
   return (
-    <section id="contatti" className="section-pad pb-28 md:pb-20">
-      <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-8 lg:grid-cols-[1fr_.8fr]">
-        <div className="contact-card motion-card" data-reveal="left">
+    <section id="contatti" className="contact-section">
+      <img className="contact-background" src={images.contact} alt={t.imageAlt} loading="lazy" />
+      <div className="contact-backdrop" aria-hidden="true" />
+      <div className="contact-inner mx-auto flex max-w-7xl items-end px-5 sm:px-8">
+        <div className="contact-content" data-reveal="left">
           <p className="text-sm font-bold uppercase tracking-[.22em] text-white/70">{t.eyebrow}</p>
-          <h2 className="mt-4 font-serif text-3xl font-semibold sm:text-5xl">
+          <h2 className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-6xl">
             Fiorilandia di Sanna Stefania
           </h2>
-          <div className="mt-8 grid gap-5 text-lg leading-8 text-white/88">
+          <div className="contact-details mt-8 text-lg leading-8 text-white/88">
             <p>
               <span className="block text-sm font-bold uppercase tracking-[.18em] text-white/60">{t.address}</span>
               {address}
@@ -650,9 +791,6 @@ function ContactSection({ t }) {
               {t.info}
             </a>
           </div>
-        </div>
-        <div className="image-card motion-card min-h-[360px]" data-reveal="scale" style={{ "--delay": "120ms" }}>
-          <img src={images.roses} alt={t.imageAlt} />
         </div>
       </div>
     </section>
