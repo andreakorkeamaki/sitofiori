@@ -83,6 +83,7 @@ const copy = {
       open: "Apri la raccolta",
       close: "Chiudi la galleria",
       photoCount: "foto",
+      dragHint: "Trascina per esplorare",
     },
     servicesIntro: {
       eyebrow: "Quello che puoi chiedere",
@@ -200,6 +201,7 @@ const copy = {
       open: "Open collection",
       close: "Close gallery",
       photoCount: "photos",
+      dragHint: "Drag to explore",
     },
     servicesIntro: {
       eyebrow: "What you can ask for",
@@ -496,6 +498,9 @@ function GalleryMarquee({ t }) {
   const [activeCategoryKey, setActiveCategoryKey] = useState(null);
   const closeButtonRef = useRef(null);
   const lastTriggerRef = useRef(null);
+  const viewportRef = useRef(null);
+  const trackRef = useRef(null);
+  const suppressClickUntilRef = useRef(0);
   const galleryItems = galleryCategoryDefinitions.map((category, index) => ({
     ...category,
     label: t.labels[index],
@@ -507,6 +512,222 @@ function GalleryMarquee({ t }) {
     setActiveCategoryKey(null);
     window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
   };
+
+  const openGallery = (event, categoryKey) => {
+    if (performance.now() < suppressClickUntilRef.current) {
+      event.preventDefault();
+      return;
+    }
+
+    lastTriggerRef.current = event.currentTarget;
+    setActiveCategoryKey(categoryKey);
+  };
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track) return undefined;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motion = {
+      x: 0,
+      loopWidth: 0,
+      velocity: 0,
+      dragging: false,
+      gliding: false,
+      paused: false,
+      dragged: false,
+      captured: false,
+      pointerId: null,
+      startClientX: 0,
+      startX: 0,
+      lastClientX: 0,
+      lastPointerTime: 0,
+      lastFrameTime: performance.now(),
+      resumeTimer: null,
+      wheelTimer: null,
+      frame: 0,
+    };
+
+    const normalize = () => {
+      if (!motion.loopWidth) return;
+      while (motion.x <= -motion.loopWidth) motion.x += motion.loopWidth;
+      while (motion.x > 0) motion.x -= motion.loopWidth;
+    };
+
+    const render = () => {
+      normalize();
+      track.style.transform = `translate3d(${motion.x}px, 0, 0)`;
+    };
+
+    const measure = () => {
+      const items = track.querySelectorAll(".marquee-item");
+      const firstOriginal = items[0];
+      const firstDuplicate = items[galleryItems.length];
+      motion.loopWidth = firstOriginal && firstDuplicate
+        ? firstDuplicate.offsetLeft - firstOriginal.offsetLeft
+        : track.scrollWidth / 2;
+      render();
+    };
+
+    const clearResumeTimer = () => {
+      if (motion.resumeTimer) window.clearTimeout(motion.resumeTimer);
+      motion.resumeTimer = null;
+    };
+
+    const pause = () => {
+      motion.paused = true;
+      clearResumeTimer();
+    };
+
+    const resumeAfter = (delay = 1100) => {
+      clearResumeTimer();
+      motion.resumeTimer = window.setTimeout(() => {
+        motion.paused = false;
+      }, delay);
+    };
+
+    const animate = (now) => {
+      const elapsed = Math.min((now - motion.lastFrameTime) / 1000, 0.05);
+      motion.lastFrameTime = now;
+
+      if (motion.gliding && !motion.dragging) {
+        motion.x += motion.velocity * elapsed;
+        motion.velocity *= Math.exp(-5.2 * elapsed);
+        if (Math.abs(motion.velocity) < 9) {
+          motion.velocity = 0;
+          motion.gliding = false;
+          resumeAfter();
+        }
+        render();
+      } else if (!motion.paused && !motion.dragging && !prefersReducedMotion) {
+        motion.x -= 38 * elapsed;
+        render();
+      }
+
+      motion.frame = window.requestAnimationFrame(animate);
+    };
+
+    const beginDrag = (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      pause();
+      motion.dragging = true;
+      motion.gliding = false;
+      motion.dragged = false;
+      motion.captured = false;
+      motion.pointerId = event.pointerId;
+      motion.startClientX = event.clientX;
+      motion.startX = motion.x;
+      motion.lastClientX = event.clientX;
+      motion.lastPointerTime = performance.now();
+    };
+
+    const drag = (event) => {
+      if (!motion.dragging || event.pointerId !== motion.pointerId) return;
+      const deltaX = event.clientX - motion.startClientX;
+      motion.x = motion.startX + deltaX;
+
+      const now = performance.now();
+      const elapsed = Math.max(now - motion.lastPointerTime, 8);
+      const nextVelocity = ((event.clientX - motion.lastClientX) / elapsed) * 1000;
+      motion.velocity = motion.velocity * 0.35 + nextVelocity * 0.65;
+      motion.lastClientX = event.clientX;
+      motion.lastPointerTime = now;
+
+      if (!motion.dragged && Math.abs(deltaX) > 5) {
+        motion.dragged = true;
+        motion.captured = true;
+        viewport.classList.add("is-dragging");
+        viewport.setPointerCapture?.(event.pointerId);
+      }
+      render();
+    };
+
+    const endDrag = (event) => {
+      if (!motion.dragging || event.pointerId !== motion.pointerId) return;
+      if (motion.captured && viewport.hasPointerCapture?.(event.pointerId)) {
+        viewport.releasePointerCapture(event.pointerId);
+      }
+      motion.dragging = false;
+      motion.captured = false;
+      motion.pointerId = null;
+      viewport.classList.remove("is-dragging");
+
+      if (motion.dragged) suppressClickUntilRef.current = performance.now() + 260;
+
+      motion.velocity = Math.max(-2200, Math.min(2200, motion.velocity));
+      if (!prefersReducedMotion && Math.abs(motion.velocity) > 55) {
+        motion.gliding = true;
+      } else {
+        motion.velocity = 0;
+        resumeAfter();
+      }
+    };
+
+    const handleWheel = (event) => {
+      const horizontalIntent = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+      if (!horizontalIntent && !event.shiftKey) return;
+
+      event.preventDefault();
+      pause();
+      motion.gliding = false;
+      const wheelDelta = horizontalIntent ? event.deltaX : event.deltaY;
+      motion.x -= wheelDelta;
+      render();
+
+      if (motion.wheelTimer) window.clearTimeout(motion.wheelTimer);
+      motion.wheelTimer = window.setTimeout(() => resumeAfter(900), 140);
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      pause();
+      const firstItem = track.querySelector(".marquee-item");
+      const styles = window.getComputedStyle(track);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
+      const step = (firstItem?.getBoundingClientRect().width || 320) + gap;
+      motion.x += event.key === "ArrowLeft" ? step : -step;
+      render();
+      resumeAfter(1400);
+    };
+
+    const handleMouseLeave = () => resumeAfter(800);
+    const handleFocusOut = () => resumeAfter(800);
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(track);
+    viewport.addEventListener("pointerdown", beginDrag);
+    viewport.addEventListener("pointermove", drag);
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
+    viewport.addEventListener("wheel", handleWheel, { passive: false });
+    viewport.addEventListener("keydown", handleKeyDown);
+    viewport.addEventListener("mouseenter", pause);
+    viewport.addEventListener("mouseleave", handleMouseLeave);
+    viewport.addEventListener("focusin", pause);
+    viewport.addEventListener("focusout", handleFocusOut);
+
+    measure();
+    motion.frame = window.requestAnimationFrame(animate);
+
+    return () => {
+      window.cancelAnimationFrame(motion.frame);
+      clearResumeTimer();
+      if (motion.wheelTimer) window.clearTimeout(motion.wheelTimer);
+      resizeObserver.disconnect();
+      viewport.removeEventListener("pointerdown", beginDrag);
+      viewport.removeEventListener("pointermove", drag);
+      viewport.removeEventListener("pointerup", endDrag);
+      viewport.removeEventListener("pointercancel", endDrag);
+      viewport.removeEventListener("wheel", handleWheel);
+      viewport.removeEventListener("keydown", handleKeyDown);
+      viewport.removeEventListener("mouseenter", pause);
+      viewport.removeEventListener("mouseleave", handleMouseLeave);
+      viewport.removeEventListener("focusin", pause);
+      viewport.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
 
   useEffect(() => {
     if (!activeCategory) return undefined;
@@ -531,8 +752,15 @@ function GalleryMarquee({ t }) {
 
   return (
     <>
-      <section className="overflow-hidden border-y border-leaf/14 bg-ivory py-8">
-        <div className="marquee-track">
+      <section className="gallery-strip border-y border-leaf/14 bg-ivory">
+        <div
+          aria-label={t.dragHint}
+          className="gallery-viewport"
+          ref={viewportRef}
+          role="region"
+          tabIndex={0}
+        >
+          <div className="marquee-track" ref={trackRef}>
           {loopItems.map((category, index) => {
             const isDuplicate = index >= galleryItems.length;
 
@@ -543,10 +771,7 @@ function GalleryMarquee({ t }) {
                 aria-label={`${t.open}: ${category.label}`}
                 className="marquee-item gallery-category-card"
                 key={`${category.key}-${index}`}
-                onClick={(event) => {
-                  lastTriggerRef.current = event.currentTarget;
-                  setActiveCategoryKey(category.key);
-                }}
+                onClick={(event) => openGallery(event, category.key)}
                 tabIndex={isDuplicate ? -1 : 0}
                 type="button"
               >
@@ -556,6 +781,10 @@ function GalleryMarquee({ t }) {
               </button>
             );
           })}
+          </div>
+          <p className="gallery-drag-hint" aria-hidden="true">
+            <span>←</span> {t.dragHint} <span>→</span>
+          </p>
         </div>
       </section>
 

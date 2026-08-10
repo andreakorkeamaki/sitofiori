@@ -693,20 +693,47 @@ button:focus-visible {
   border-left: 1px solid rgba(255, 255, 255, 0.25);
 }
 
+.gallery-strip {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.5rem, 5vw, 4.75rem) 0;
+}
+
+.gallery-viewport {
+  position: relative;
+  overflow: hidden;
+  padding: 0.9rem 0 2.8rem;
+  cursor: grab;
+  outline: none;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.gallery-viewport:focus-visible {
+  outline: 3px solid rgba(180, 106, 76, 0.62);
+  outline-offset: -3px;
+}
+
+.gallery-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.gallery-viewport.is-dragging .gallery-category-card {
+  pointer-events: none;
+}
+
 .marquee-track {
   display: flex;
   width: max-content;
-  gap: 1rem;
-  animation: marquee-scroll 34s linear infinite;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  padding-left: clamp(1rem, 3vw, 2.75rem);
+  will-change: transform;
 }
 
 .marquee-item {
   position: relative;
-  width: clamp(14rem, 28vw, 24rem);
+  width: clamp(22rem, 34vw, 31rem);
   aspect-ratio: 4 / 3;
   flex: 0 0 auto;
   overflow: hidden;
@@ -723,6 +750,7 @@ button:focus-visible {
   transition:
     box-shadow 240ms ease,
     transform 240ms ease;
+  -webkit-user-drag: none;
 }
 
 .gallery-category-card:hover {
@@ -732,6 +760,31 @@ button:focus-visible {
 
 .marquee-item:hover img {
   transform: scale(1.06);
+}
+
+.marquee-item img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.gallery-drag-hint {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.75rem);
+  bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  color: rgba(91, 70, 54, 0.62);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gallery-drag-hint span {
+  color: #b46a4c;
+  font-size: 1rem;
 }
 
 .marquee-caption {
@@ -967,6 +1020,30 @@ button:focus-visible {
   .review-card {
     width: 82vw;
     min-height: 19rem;
+  }
+
+  .gallery-strip {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .gallery-viewport {
+    padding-bottom: 2.45rem;
+  }
+
+  .marquee-track {
+    gap: 0.9rem;
+    padding-left: 1rem;
+  }
+
+  .marquee-item {
+    width: min(82vw, 23rem);
+  }
+
+  .gallery-drag-hint {
+    right: 1rem;
+    bottom: 0.2rem;
+    font-size: 0.66rem;
   }
 
   .gallery-modal {
