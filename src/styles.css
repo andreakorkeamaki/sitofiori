@@ -246,6 +246,68 @@ button:focus-visible {
   padding-bottom: clamp(4.25rem, 8vw, 7rem);
 }
 
+.quick-answers {
+  border-bottom: 1px solid rgba(79, 111, 82, 0.14);
+  background: #f8f1e6;
+}
+
+.quick-answers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.quick-answer-card {
+  display: flex;
+  min-height: 17rem;
+  scroll-margin-top: 7rem;
+  flex-direction: column;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgba(79, 111, 82, 0.16);
+  border-radius: 1.2rem;
+  background: #f5efe3;
+  box-shadow: 0 14px 36px rgba(91, 70, 54, 0.08);
+}
+
+.service-card,
+#consegna-a-domicilio {
+  scroll-margin-top: 7rem;
+}
+
+.quick-answer-card h3 {
+  color: #4f6f52;
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.quick-answer-card p {
+  margin-top: 1rem;
+  color: rgba(91, 70, 54, 0.76);
+  line-height: 1.7;
+}
+
+.quick-answer-card a {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  color: #4f6f52;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: rgba(79, 111, 82, 0.3);
+  text-underline-offset: 0.3em;
+}
+
+@media (max-width: 800px) {
+  .quick-answers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-answer-card {
+    min-height: 0;
+  }
+}
+
 .texture-band {
   background:
     linear-gradient(120deg, rgba(198, 161, 107, 0.14), transparent 34%),
@@ -393,7 +455,6 @@ button:focus-visible {
 
 .service-card,
 .review-card,
-.guide-step,
 .order-panel {
   border: 1px solid rgba(79, 111, 82, 0.17);
   border-radius: 0.5rem;
@@ -479,30 +540,121 @@ button:focus-visible {
   font-weight: 900;
 }
 
-.guide-grid {
-  display: grid;
-  gap: 1rem;
+.guide-section {
+  overflow: hidden;
+  padding-top: clamp(5.5rem, 10vw, 9rem);
+  padding-bottom: clamp(6rem, 12vw, 11rem);
+}
+
+.guide-heading {
+  position: relative;
+  z-index: 2;
+}
+
+.guide-journey {
+  position: relative;
+  min-height: 52rem;
+  margin-top: clamp(4rem, 8vw, 7rem);
+}
+
+.guide-path {
+  position: absolute;
+  inset: -1rem 17% 0;
+  width: 66%;
+  height: calc(100% + 1rem);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.guide-path-shadow,
+.guide-path-line {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.guide-path-shadow {
+  stroke: rgba(79, 111, 82, 0.1);
+  stroke-width: 18;
+}
+
+.guide-path-line {
+  stroke: #b46a4c;
+  stroke-width: 3;
+  stroke-dasharray: 1;
+  stroke-dashoffset: var(--guide-dashoffset, 1);
+  opacity: var(--guide-line-opacity, 0);
+  filter: drop-shadow(0 0 8px rgba(180, 106, 76, 0.34));
 }
 
 .guide-step {
-  position: relative;
+  position: absolute;
+  z-index: 1;
   display: grid;
-  gap: 0.75rem;
-  padding: 1.25rem;
+  width: min(25rem, 38%);
+  grid-template-columns: auto 1fr;
+  gap: 1.1rem;
+  align-items: start;
+  padding: 1.1rem 0 1.35rem;
+  opacity: var(--step-opacity, 0.24);
+  transform: translateY(var(--step-shift, 34px)) scale(var(--step-scale, 0.97));
+  transform-origin: left center;
 }
 
-.guide-step span {
+.guide-step::after {
+  position: absolute;
+  bottom: 0;
+  left: 4.45rem;
+  width: var(--step-line, 24%);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(180, 106, 76, 0.72), rgba(79, 111, 82, 0.05));
+  content: "";
+}
+
+.guide-step-1 {
+  top: 0;
+  left: 3%;
+}
+
+.guide-step-2 {
+  top: 24%;
+  right: 2%;
+}
+
+.guide-step-3 {
+  top: 51%;
+  left: 4%;
+}
+
+.guide-step-4 {
+  right: 4%;
+  bottom: 0;
+}
+
+.guide-number {
+  position: relative;
   display: grid;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 3.35rem;
+  height: 3.35rem;
   place-items: center;
   border-radius: 999px;
-  background: #4f6f52;
+  background: linear-gradient(145deg, #4f6f52, #66886a);
   color: #ffffff;
   font-weight: 900;
+  box-shadow: 0 0 0 7px rgba(79, 111, 82, 0.08);
+}
+
+.guide-number::after {
+  position: absolute;
+  inset: -0.65rem;
+  border: 1px solid rgba(180, 106, 76, 0.3);
+  border-radius: inherit;
+  content: "";
+  opacity: var(--ring-opacity, 0);
+  transform: scale(var(--ring-scale, 0.78));
 }
 
 .guide-step h3 {
+  margin-top: 0.1rem;
   color: #4f6f52;
   font-family: var(--font-serif);
   font-size: 1.7rem;
@@ -511,6 +663,7 @@ button:focus-visible {
 }
 
 .guide-step p {
+  margin-top: 0.55rem;
   color: rgba(91, 70, 54, 0.76);
   line-height: 1.75;
 }
@@ -580,7 +733,7 @@ button:focus-visible {
   font-size: 0.92rem;
 }
 
-.review-card figcaption span {
+.review-card figcaption a {
   color: rgba(91, 70, 54, 0.58);
   font-size: 0.76rem;
   font-weight: 700;
@@ -919,23 +1072,6 @@ button:focus-visible {
     display: none;
   }
 
-  .guide-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .guide-step::after {
-    position: absolute;
-    top: 2.55rem;
-    right: -0.8rem;
-    width: 1.35rem;
-    height: 2px;
-    background: rgba(79, 111, 82, 0.24);
-    content: "";
-  }
-
-  .guide-step:last-child::after {
-    display: none;
-  }
 }
 
 @media (max-width: 767px) {
@@ -946,6 +1082,36 @@ button:focus-visible {
 
   .brand-mark {
     font-size: 1.35rem;
+  }
+
+  .guide-journey {
+    min-height: 0;
+    margin-top: 3.5rem;
+    padding-left: 1rem;
+  }
+
+  .guide-path {
+    inset: 0 auto 0 0.9rem;
+    width: 3rem;
+    height: 100%;
+  }
+
+  .guide-path-shadow {
+    stroke-width: 12;
+  }
+
+  .guide-step,
+  .guide-step-1,
+  .guide-step-2,
+  .guide-step-3,
+  .guide-step-4 {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    margin: 0 0 1.4rem 2.2rem;
   }
 
   .hero-section,

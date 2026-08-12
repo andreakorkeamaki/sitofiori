@@ -11,8 +11,7 @@ const mapsUrl =
 const images = {
   hero: "/images/fiorilandia-hero.webp",
   contact: "/images/fiorilandia-contact.webp",
-  workbench:
-    "https://images.unsplash.com/photo-1487070183336-b863922373d4?auto=format&fit=crop&w=1200&q=84",
+  story: "/images/fiorilandia-story.webp",
   bouquet: "/images/fiorilandia-service.webp",
   seasonal: "/images/fiorilandia-seasonal.webp",
   delivery: "/images/fiorilandia-delivery.webp",
@@ -35,7 +34,7 @@ const galleryCategoryDefinitions = [
     key: "arrangements",
     cover: galleryPhoto("043"),
     photos: [
-      "004", "005", "006", "008", "009", "010", "013", "014", "018", "025", "026", "027",
+      "008", "009", "010", "013", "014", "018", "025", "026", "027",
       "028", "031", "034", "039", "043", "047", "048", "049", "060", "062", "077", "083",
     ].map(galleryPhoto),
   },
@@ -57,7 +56,7 @@ const copy = {
     nav: ["Stefania", "Bouquet", "Come ordinare", "Contatti"],
     hero: {
       eyebrow: "A Viterbo dal 1997",
-      title: "Ogni bouquet comincia da una persona",
+      title: "Bouquet e composizioni floreali a Viterbo, fatti per la persona",
       subtitle:
         "Da Fiorilandia, Stefania prepara bouquet, mazzi e composizioni per le persone e i momenti che contano.",
       call: "Chiama 0761 344066",
@@ -70,12 +69,21 @@ const copy = {
       ["C'è Stefania", "È lei ad ascoltare la richiesta, consigliare e preparare ogni composizione."],
       ["Fatto per te", "Ogni mazzo parte da una persona, da un'occasione e da quello che vuoi dire."],
     ],
+    quickAnswers: {
+      eyebrow: "Risposte rapide",
+      title: "Cosa cerchi da una fioreria a Viterbo?",
+      items: [
+        ["Un bouquet o una composizione?", "Fiorilandia prepara bouquet e composizioni su misura partendo da occasione, colori e budget.", "#bouquet-e-composizioni", "Vai ai bouquet e alle composizioni"],
+        ["Vuoi far consegnare dei fiori?", "La consegna a Viterbo è da concordare direttamente con Stefania in base a indirizzo e disponibilità.", "#consegna-a-domicilio", "Come funziona la consegna"],
+        ["Non sai quali fiori scegliere?", "Non serve conoscere i nomi dei fiori: bastano la persona, l'occasione, un colore o il budget.", "#guida", "Scopri come scegliere insieme"],
+      ],
+    },
     story: {
       eyebrow: "La bottega di Stefania",
       title: "Un luogo caldo e familiare dove ogni mazzo è diverso",
       body:
         "Fiorilandia nasce dall'idea di una terra dei fiori: una bottega semplice, curata e personale dove scegliere un omaggio floreale con calma. Stefania segue direttamente il negozio, ascolta la richiesta e prepara ogni composizione con attenzione.",
-      imageAlt: "Interno luminoso di una fioreria con fiori freschi",
+      imageAlt: "Interno caldo e familiare di una fioreria piena di fiori e piante fresche",
     },
     gallery: {
       labels: ["Bouquet su misura", "Composizioni floreali", "Matrimoni e cerimonie", "Piante e coroncine"],
@@ -175,7 +183,7 @@ const copy = {
     nav: ["Stefania", "Bouquets", "How to order", "Contact"],
     hero: {
       eyebrow: "In Viterbo since 1997",
-      title: "Every bouquet begins with a person",
+      title: "Bouquets and floral arrangements in Viterbo, made for the person",
       subtitle:
         "At Fiorilandia, Stefania prepares bouquets and arrangements for the people and moments that matter.",
       call: "Call 0761 344066",
@@ -188,12 +196,21 @@ const copy = {
       ["Meet Stefania", "She listens, offers advice and personally prepares every arrangement."],
       ["Made for you", "Every bouquet begins with a person, an occasion and something you want to say."],
     ],
+    quickAnswers: {
+      eyebrow: "Quick answers",
+      title: "What do you need from a florist in Viterbo?",
+      items: [
+        ["A bouquet or arrangement?", "Fiorilandia makes bouquets and arrangements to order, guided by the occasion, colors and budget.", "#bouquet-e-composizioni", "Go to bouquets and arrangements"],
+        ["Would you like flowers delivered?", "Delivery in Viterbo is arranged directly with Stefania according to the address and availability.", "#consegna-a-domicilio", "How delivery works"],
+        ["Not sure which flowers to choose?", "You do not need to know flower names: begin with the person, the occasion, a color or your budget.", "#guida", "See how to choose together"],
+      ],
+    },
     story: {
       eyebrow: "Stefania's flower shop",
       title: "A warm, familiar place where every bouquet is different",
       body:
         "Fiorilandia comes from the idea of a land of flowers: a simple, carefully kept and personal shop where people can choose a floral gift at their own pace. Stefania runs the shop directly, listens to each request and prepares every arrangement with care.",
-      imageAlt: "Bright flower shop interior with fresh flowers",
+      imageAlt: "Warm, familiar flower shop interior filled with fresh flowers and plants",
     },
     gallery: {
       labels: ["Made-to-order bouquets", "Floral arrangements", "Weddings and ceremonies", "Plants and wreaths"],
@@ -363,6 +380,7 @@ function App() {
       <Highlights cards={t.introCards} />
       <StorySection t={t.story} />
       <GalleryMarquee t={t.gallery} />
+      <QuickAnswers t={t.quickAnswers} />
       <ServicesSection intro={t.servicesIntro} services={t.services} />
       <GuideSection t={t.guide} />
       <SeasonalitySection t={t.seasonality} />
@@ -477,6 +495,26 @@ function Highlights({ cards }) {
   );
 }
 
+function QuickAnswers({ t }) {
+  return (
+    <section className="quick-answers section-pad" aria-labelledby="quick-answers-title">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <p className="eyebrow">{t.eyebrow}</p>
+        <h2 className="section-title" id="quick-answers-title">{t.title}</h2>
+        <div className="quick-answers-grid mt-10">
+          {t.items.map(([question, answer, href, label]) => (
+            <article className="quick-answer-card" key={href}>
+              <h3>{question}</h3>
+              <p>{answer}</p>
+              <a href={href}>{label} <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function StorySection({ t }) {
   return (
     <section id="stefania" className="section-pad texture-band">
@@ -486,8 +524,8 @@ function StorySection({ t }) {
           <h2 className="section-title">{t.title}</h2>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-earth/78">{t.body}</p>
         </div>
-        <div className="image-card motion-card aspect-[4/3]" data-reveal="scale" style={{ "--delay": "120ms" }}>
-          <img src={images.workbench} alt={t.imageAlt} />
+        <div className="image-card motion-card aspect-[3/4]" data-reveal="scale" style={{ "--delay": "120ms" }}>
+          <img src={images.story} alt={t.imageAlt} loading="lazy" />
         </div>
       </div>
     </section>
@@ -835,6 +873,8 @@ function GalleryMarquee({ t }) {
 }
 
 function ServicesSection({ intro, services }) {
+  const serviceIds = ["bouquet-e-composizioni", null, "corone-di-alloro", null, null, null];
+
   return (
     <section id="servizi" className="section-pad bg-sage-light/42">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -855,6 +895,7 @@ function ServicesSection({ intro, services }) {
               <article
                 className="service-card motion-card"
                 data-reveal
+                id={serviceIds[index] || undefined}
                 key={title}
                 style={{
                   "--accent": ["#4f6f52", "#b46a4c", "#c08a96"][index % 3],
@@ -876,19 +917,80 @@ function ServicesSection({ intro, services }) {
 }
 
 function GuideSection({ t }) {
+  const guideRef = useRef(null);
+
+  useEffect(() => {
+    const section = guideRef.current;
+    if (!section) return undefined;
+
+    const steps = [...section.querySelectorAll(".guide-step")];
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let frame = null;
+
+    const setProgress = (progress) => {
+      section.style.setProperty("--guide-progress", progress.toFixed(4));
+      section.style.setProperty("--guide-dashoffset", String(1 - progress));
+      section.style.setProperty("--guide-line-opacity", String(Math.min(1, progress * 12)));
+
+      steps.forEach((step, index) => {
+        const stepProgress = Math.max(0, Math.min(1, (progress - index * 0.21) / 0.28));
+        step.style.setProperty("--step-opacity", String(0.24 + stepProgress * 0.76));
+        step.style.setProperty("--step-shift", `${(1 - stepProgress) * 34}px`);
+        step.style.setProperty("--step-scale", String(0.97 + stepProgress * 0.03));
+        step.style.setProperty("--step-line", `${24 + stepProgress * 76}%`);
+        step.style.setProperty("--ring-opacity", String(stepProgress * 0.7));
+        step.style.setProperty("--ring-scale", String(0.78 + stepProgress * 0.42));
+      });
+    };
+
+    const updateGuideProgress = () => {
+      frame = null;
+      if (reduceMotion) {
+        setProgress(1);
+        return;
+      }
+
+      const rect = section.getBoundingClientRect();
+      const start = window.innerHeight * 0.78;
+      const travel = Math.max(rect.height - window.innerHeight * 0.28, 1);
+      const progress = Math.max(0, Math.min(1, (start - rect.top) / travel));
+      setProgress(progress);
+    };
+
+    const requestGuideUpdate = () => {
+      if (frame === null) frame = window.requestAnimationFrame(updateGuideProgress);
+    };
+
+    updateGuideProgress();
+    window.addEventListener("scroll", requestGuideUpdate, { passive: true });
+    window.addEventListener("resize", requestGuideUpdate);
+
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestGuideUpdate);
+      window.removeEventListener("resize", requestGuideUpdate);
+    };
+  }, []);
+
   return (
-    <section id="guida" className="section-pad bg-warm">
+    <section id="guida" className="guide-section bg-warm" ref={guideRef}>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="max-w-3xl" data-reveal>
+        <div className="guide-heading max-w-3xl" data-reveal>
           <p className="eyebrow">{t.eyebrow}</p>
           <h2 className="section-title">{t.title}</h2>
         </div>
-        <div className="guide-grid mt-12">
+        <div className="guide-journey">
+          <svg className="guide-path" viewBox="0 0 1000 820" preserveAspectRatio="none" aria-hidden="true">
+            <path className="guide-path-shadow" pathLength="1" d="M500 15 C760 135 745 260 500 330 C245 405 245 540 510 610 C715 665 700 760 515 810" />
+            <path className="guide-path-line" pathLength="1" d="M500 15 C760 135 745 260 500 330 C245 405 245 540 510 610 C715 665 700 760 515 810" />
+          </svg>
           {t.steps.map(([title, body], index) => (
-            <article className="guide-step motion-card" data-reveal key={title} style={{ "--delay": `${index * 80}ms` }}>
-              <span>{index + 1}</span>
-              <h3>{title}</h3>
-              <p>{body}</p>
+            <article className={`guide-step guide-step-${index + 1}`} key={title}>
+              <span className="guide-number"><b>{index + 1}</b></span>
+              <div>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -947,7 +1049,7 @@ function ReviewsSection({ intro, reviews }) {
               <blockquote>“{review.quote}”</blockquote>
               <figcaption>
                 <strong>{review.name}</strong>
-                <span><b aria-hidden="true">G</b> Recensione Google</span>
+                <a href={mapsUrl} target="_blank" rel="noreferrer"><b aria-hidden="true">G</b> Recensione Google</a>
               </figcaption>
             </figure>
           ))}
@@ -959,7 +1061,7 @@ function ReviewsSection({ intro, reviews }) {
 
 function DeliverySection({ t }) {
   return (
-    <section className="section-pad bg-kraft/22">
+    <section className="section-pad bg-kraft/22" id="consegna-a-domicilio">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[1fr_.9fr] lg:items-center">
         <div className="order-panel motion-card" data-reveal="left">
           <p className="eyebrow">{t.eyebrow}</p>
