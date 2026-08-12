@@ -923,38 +923,51 @@ function GuideSection({ t }) {
     const section = guideRef.current;
     if (!section) return undefined;
 
+    const journey = section.querySelector(".guide-journey");
     const steps = [...section.querySelectorAll(".guide-step")];
+    if (!journey) return undefined;
+
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let frame = null;
 
-    const setProgress = (progress) => {
+    const setLineProgress = (progress) => {
       section.style.setProperty("--guide-progress", progress.toFixed(4));
-      section.style.setProperty("--guide-dashoffset", String(1 - progress));
-      section.style.setProperty("--guide-line-opacity", String(Math.min(1, progress * 12)));
+    };
 
-      steps.forEach((step, index) => {
-        const stepProgress = Math.max(0, Math.min(1, (progress - index * 0.21) / 0.28));
-        step.style.setProperty("--step-opacity", String(0.24 + stepProgress * 0.76));
-        step.style.setProperty("--step-shift", `${(1 - stepProgress) * 34}px`);
-        step.style.setProperty("--step-scale", String(0.97 + stepProgress * 0.03));
-        step.style.setProperty("--step-line", `${24 + stepProgress * 76}%`);
-        step.style.setProperty("--ring-opacity", String(stepProgress * 0.7));
-        step.style.setProperty("--ring-scale", String(0.78 + stepProgress * 0.42));
-      });
+    const setStepProgress = (step, progress) => {
+      const direction = step.classList.contains("guide-step--left") ? -1 : 1;
+      step.style.setProperty("--step-opacity", String(0.18 + progress * 0.82));
+      step.style.setProperty("--step-translate", `${direction * (1 - progress) * 112}px`);
+      step.style.setProperty("--step-scale", String(0.96 + progress * 0.04));
+      step.style.setProperty("--connector-progress", String(progress));
+      step.style.setProperty("--marker-scale", String(0.5 + progress * 0.5));
+      step.style.setProperty("--ring-opacity", String(progress * 0.78));
+      step.style.setProperty("--ring-scale", String(0.72 + progress * 0.28));
     };
 
     const updateGuideProgress = () => {
       frame = null;
       if (reduceMotion) {
-        setProgress(1);
+        setLineProgress(1);
+        steps.forEach((step) => setStepProgress(step, 1));
         return;
       }
 
-      const rect = section.getBoundingClientRect();
-      const start = window.innerHeight * 0.78;
-      const travel = Math.max(rect.height - window.innerHeight * 0.28, 1);
-      const progress = Math.max(0, Math.min(1, (start - rect.top) / travel));
-      setProgress(progress);
+      const journeyRect = journey.getBoundingClientRect();
+      const lineStart = window.innerHeight * 0.82;
+      const lineTravel = Math.max(journeyRect.height - window.innerHeight * 0.3, 1);
+      const lineProgress = Math.max(0, Math.min(1, (lineStart - journeyRect.top) / lineTravel));
+      setLineProgress(lineProgress);
+
+      steps.forEach((step) => {
+        const stepRect = step.getBoundingClientRect();
+        const entranceDistance = Math.max(window.innerHeight * 0.3, 210);
+        const stepProgress = Math.max(
+          0,
+          Math.min(1, (window.innerHeight * 0.84 - stepRect.top) / entranceDistance),
+        );
+        setStepProgress(step, stepProgress);
+      });
     };
 
     const requestGuideUpdate = () => {
@@ -980,12 +993,14 @@ function GuideSection({ t }) {
           <h2 className="section-title">{t.title}</h2>
         </div>
         <div className="guide-journey">
-          <svg className="guide-path" viewBox="0 0 1000 820" preserveAspectRatio="none" aria-hidden="true">
-            <path className="guide-path-shadow" pathLength="1" d="M500 15 C760 135 745 260 500 330 C245 405 245 540 510 610 C715 665 700 760 515 810" />
-            <path className="guide-path-line" pathLength="1" d="M500 15 C760 135 745 260 500 330 C245 405 245 540 510 610 C715 665 700 760 515 810" />
-          </svg>
+          <div className="guide-path" aria-hidden="true">
+            <span className="guide-path-line" />
+          </div>
           {t.steps.map(([title, body], index) => (
-            <article className={`guide-step guide-step-${index + 1}`} key={title}>
+            <article
+              className={`guide-step guide-step-${index + 1} guide-step--${index % 2 === 0 ? "left" : "right"}`}
+              key={title}
+            >
               <span className="guide-number"><b>{index + 1}</b></span>
               <div>
                 <h3>{title}</h3>
