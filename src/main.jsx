@@ -56,7 +56,7 @@ const copy = {
     nav: ["Stefania", "Bouquet", "Come ordinare", "Contatti"],
     hero: {
       eyebrow: "A Viterbo dal 1997",
-      title: "Bouquet e composizioni floreali a Viterbo, fatti per la persona",
+      title: "Ogni bouquet comincia da una persona",
       subtitle:
         "Da Fiorilandia, Stefania prepara bouquet, mazzi e composizioni per le persone e i momenti che contano.",
       call: "Chiama 0761 344066",
@@ -183,7 +183,7 @@ const copy = {
     nav: ["Stefania", "Bouquets", "How to order", "Contact"],
     hero: {
       eyebrow: "In Viterbo since 1997",
-      title: "Bouquets and floral arrangements in Viterbo, made for the person",
+      title: "Every bouquet begins with a person",
       subtitle:
         "At Fiorilandia, Stefania prepares bouquets and arrangements for the people and moments that matter.",
       call: "Call 0761 344066",
