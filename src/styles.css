@@ -1101,15 +1101,17 @@ button:focus-visible {
 }
 
 .gallery-modal-grid {
-  columns: 4 15rem;
-  column-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
   padding: clamp(1rem, 3vw, 2rem);
 }
 
 .gallery-modal-grid figure {
+  position: relative;
   overflow: hidden;
-  margin: 0 0 1rem;
-  break-inside: avoid;
+  aspect-ratio: 4 / 5;
+  margin: 0;
   border-radius: 0.65rem;
   background: #efe2d0;
   box-shadow: 0 14px 35px rgba(91, 70, 54, 0.1);
@@ -1118,7 +1120,28 @@ button:focus-visible {
 .gallery-modal-grid img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-photo-number {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  display: grid;
+  min-width: 2.45rem;
+  height: 2.45rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 999px;
+  background: rgba(74, 56, 45, 0.86);
+  box-shadow: 0 5px 18px rgba(49, 38, 32, 0.24);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  backdrop-filter: blur(10px);
 }
 
 @media (min-width: 768px) {
@@ -1299,13 +1322,17 @@ button:focus-visible {
   }
 
   .gallery-modal-grid {
-    columns: 2 9rem;
-    column-gap: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
     padding: 0.75rem;
   }
 
-  .gallery-modal-grid figure {
-    margin-bottom: 0.65rem;
+  .gallery-photo-number {
+    top: 0.45rem;
+    right: 0.45rem;
+    min-width: 2rem;
+    height: 2rem;
+    font-size: 0.72rem;
   }
 
   .contact-section {
