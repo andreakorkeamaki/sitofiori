@@ -862,6 +862,9 @@ function GalleryMarquee({ t }) {
                     decoding="async"
                     loading="lazy"
                   />
+                  <span className="gallery-photo-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </figure>
               ))}
             </div>
