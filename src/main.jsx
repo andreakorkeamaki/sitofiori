@@ -26,27 +26,38 @@ const galleryCategoryDefinitions = [
     photos: [
       "001", "002", "003", "011", "016", "017", "020", "021", "022", "023", "024", "033",
       "035", "036", "038", "040", "041", "042", "044", "045", "050", "051", "052", "053",
-      "056", "058", "059", "061", "063", "064", "065", "066", "067", "068", "070",
-      "071", "072", "073", "074", "075", "076", "078", "079", "080", "081", "082",
+      "056", "058", "059", "063", "064", "065", "066", "067", "068", "070", "071",
+      "072", "073", "074", "075", "076", "078", "079", "080", "081", "082", "014",
+      "025", "026", "034", "039", "062",
     ].map(galleryPhoto),
   },
   {
     key: "arrangements",
     cover: galleryPhoto("043"),
     photos: [
-      "008", "009", "010", "013", "014", "018", "025", "026", "027",
-      "028", "031", "034", "039", "043", "047", "048", "049", "060", "062", "077", "083",
+      "008", "009", "010", "013", "018", "027", "028", "031", "043", "047", "048",
+      "049", "060", "077", "083", "061", "030", "037", "057",
     ].map(galleryPhoto),
   },
   {
     key: "weddings",
     cover: galleryPhoto("089"),
-    photos: ["019", "046", "054", "055", "084", "085", "086", "087", "088", "089"].map(galleryPhoto),
+    photos: [
+      ...["019", "046", "054", "055", "084", "085", "086", "087", "088", "089"].map(galleryPhoto),
+      "/images/gallery/wedding-4993.webp",
+      "/images/gallery/wedding-4791.webp",
+      "/images/gallery/wedding-013802.webp",
+      "/images/gallery/wedding-4028.webp",
+      "/images/gallery/wedding-101927.webp",
+      "/images/gallery/wedding-3982.webp",
+      "/images/gallery/wedding-3096.webp",
+      "/images/gallery/wedding-121556.webp",
+    ],
   },
   {
     key: "plants",
     cover: galleryPhoto("032"),
-    photos: ["007", "015", "029", "030", "032", "037", "057"].map(galleryPhoto),
+    photos: ["007", "015", "029", "032"].map(galleryPhoto),
   },
 ];
 
@@ -56,12 +67,12 @@ const copy = {
     nav: ["Stefania", "Bouquet", "Come ordinare", "Contatti"],
     hero: {
       eyebrow: "A Viterbo dal 1997",
-      title: "Ogni bouquet comincia da una persona",
+      title: "Con un fiore regali un’emozione",
       subtitle:
-        "Da Fiorilandia, Stefania prepara bouquet, mazzi e composizioni per le persone e i momenti che contano.",
+        "Da Fiorilandia, Stefania prepara bouquet, mazzi e composizioni per tutte le occasioni speciali o semplicemente per sorprendere qualcuno, anche quando l’occasione non c’è.",
       call: "Chiama 0761 344066",
       directions: "Indicazioni",
-      note: "Tutto comincia da una domanda semplice: per chi sono questi fiori?",
+      note: "Regalare un fiore significa “ti ho pensato”: regalare un fiore significa regalare un’emozione.",
       imageAlt: "Composizioni floreali rosa realizzate da Fiorilandia",
     },
     introCards: [
@@ -80,9 +91,9 @@ const copy = {
     },
     story: {
       eyebrow: "La bottega di Stefania",
-      title: "Un luogo caldo e familiare dove ogni mazzo è diverso",
+      title: "Una piccola bottega piena di colori e profumi",
       body:
-        "Fiorilandia nasce dall'idea di una terra dei fiori: una bottega semplice, curata e personale dove scegliere un omaggio floreale con calma. Stefania segue direttamente il negozio, ascolta la richiesta e prepara ogni composizione con attenzione.",
+        "Da Fiorilandia potrai scegliere un omaggio floreale. Stefania trasformerà i fiori in meravigliose idee da regalare e da vivere. Segue direttamente il negozio, ascolta la richiesta e crea ogni composizione in maniera accurata.",
       imageAlt: "Interno caldo e familiare di una fioreria piena di fiori e piante fresche",
     },
     gallery: {
@@ -95,7 +106,7 @@ const copy = {
     },
     servicesIntro: {
       eyebrow: "Quello che puoi chiedere",
-      title: "Un bouquet, una corona, un pensiero da far arrivare",
+      title: "Un bouquet, una pianta, un pensiero da far arrivare",
       body:
         "Basta raccontare l'occasione e dare qualche indicazione. Stefania ti aiuta a trovare la soluzione giusta.",
       imageAlt: "Bouquet chiaro preparato in fioreria",
@@ -183,12 +194,12 @@ const copy = {
     nav: ["Stefania", "Bouquets", "How to order", "Contact"],
     hero: {
       eyebrow: "In Viterbo since 1997",
-      title: "Every bouquet begins with a person",
+      title: "With a flower, you give an emotion",
       subtitle:
-        "At Fiorilandia, Stefania prepares bouquets and arrangements for the people and moments that matter.",
+        "At Fiorilandia, Stefania prepares bouquets, flower bunches and arrangements for every special occasion, or simply to surprise someone when there is no occasion at all.",
       call: "Call 0761 344066",
       directions: "Directions",
-      note: "It all starts with a simple question: who are these flowers for?",
+      note: "Giving a flower means saying “I thought of you”: giving a flower means giving an emotion.",
       imageAlt: "Pink floral arrangements created by Fiorilandia",
     },
     introCards: [
@@ -207,9 +218,9 @@ const copy = {
     },
     story: {
       eyebrow: "Stefania's flower shop",
-      title: "A warm, familiar place where every bouquet is different",
+      title: "A small flower shop filled with colors and scents",
       body:
-        "Fiorilandia comes from the idea of a land of flowers: a simple, carefully kept and personal shop where people can choose a floral gift at their own pace. Stefania runs the shop directly, listens to each request and prepares every arrangement with care.",
+        "At Fiorilandia you can choose a floral gift. Stefania transforms flowers into wonderful ideas to give and enjoy. She runs the shop herself, listens to every request and creates each arrangement with great care.",
       imageAlt: "Warm, familiar flower shop interior filled with fresh flowers and plants",
     },
     gallery: {
@@ -222,7 +233,7 @@ const copy = {
     },
     servicesIntro: {
       eyebrow: "What you can ask for",
-      title: "A bouquet, a laurel wreath, a thoughtful gift delivered",
+      title: "A bouquet, a plant, a thoughtful gift delivered",
       body:
         "Tell Stefania about the occasion and share a few details. She will help you find the right solution.",
       imageAlt: "Light-colored bouquet prepared in the flower shop",
