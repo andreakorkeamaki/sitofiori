@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import PrivacyPolicy from "./PrivacyPolicy";
 import "./styles.css";
 
 const phone = "0761344066";
@@ -140,6 +141,8 @@ const copy = {
     reviewsIntro: {
       eyebrow: "Recensioni",
       title: "Cura e disponibilità, raccontate dai clienti",
+      source: "Selezione di recensioni pubblicate su Google Maps",
+      sourceLink: "Vai alle recensioni su Google Maps",
     },
     reviews: [
       {
@@ -267,6 +270,8 @@ const copy = {
     reviewsIntro: {
       eyebrow: "Reviews",
       title: "Care and helpful advice, in our customers' words",
+      source: "A selection of reviews published on Google Maps",
+      sourceLink: "View the reviews on Google Maps",
     },
     reviews: [
       {
@@ -322,7 +327,18 @@ function App() {
   const [locale, setLocale] = useState("it");
   const [isScrolled, setIsScrolled] = useState(false);
   const [showSticky, setShowSticky] = useState(false);
+  const [isPrivacyPage, setIsPrivacyPage] = useState(window.location.hash === "#privacy");
   const t = copy[locale];
+
+  useEffect(() => {
+    const updatePage = () => {
+      setIsPrivacyPage(window.location.hash === "#privacy");
+      window.scrollTo({ top: 0, behavior: "auto" });
+    };
+
+    window.addEventListener("hashchange", updatePage);
+    return () => window.removeEventListener("hashchange", updatePage);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -382,6 +398,10 @@ function App() {
 
     revealItems.forEach((item) => item.classList.add("is-visible"));
   }, [locale]);
+
+  if (isPrivacyPage) {
+    return <PrivacyPolicy address={address} displayPhone={displayPhone} phone={phone} />;
+  }
 
   return (
     <main className="min-h-screen bg-warm text-earth">
@@ -1064,6 +1084,12 @@ function ReviewsSection({ intro, reviews }) {
         <div className="max-w-2xl" data-reveal>
           <p className="eyebrow">{intro.eyebrow}</p>
           <h2 className="section-title">{intro.title}</h2>
+          <p className="reviews-source mt-4">
+            {intro.source}.{" "}
+            <a href={mapsUrl} target="_blank" rel="noreferrer">
+              {intro.sourceLink}
+            </a>
+          </p>
         </div>
       </div>
       <div className="reviews-viewport mt-10" data-reveal>
@@ -1078,7 +1104,7 @@ function ReviewsSection({ intro, reviews }) {
               <blockquote>“{review.quote}”</blockquote>
               <figcaption>
                 <strong>{review.name}</strong>
-                <a href={mapsUrl} target="_blank" rel="noreferrer"><b aria-hidden="true">G</b> Recensione Google</a>
+                <a href={mapsUrl} target="_blank" rel="noreferrer"><b aria-hidden="true">G</b> Google Maps</a>
               </figcaption>
             </figure>
           ))}
@@ -1168,6 +1194,10 @@ function Footer() {
       <span className="mx-2 text-earth/35">·</span>
       <a className="font-bold text-leaf underline-offset-4 hover:underline" href={`tel:${phone}`}>
         {displayPhone}
+      </a>
+      <span className="mx-2 text-earth/35">·</span>
+      <a className="font-bold text-leaf underline-offset-4 hover:underline" href="#privacy">
+        Privacy e Cookie
       </a>
     </footer>
   );

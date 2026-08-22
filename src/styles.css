@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-latin.woff2") format("woff2");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/manrope-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-warm: #f8f1e6;
   --color-ivory: #f5efe3;
@@ -805,6 +821,18 @@ button:focus-visible {
   box-shadow: 0 2px 8px rgba(91, 70, 54, 0.14);
 }
 
+.reviews-source {
+  color: rgba(91, 70, 54, 0.7);
+  line-height: 1.7;
+}
+
+.reviews-source a {
+  color: #4f6f52;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .order-panel {
   padding: clamp(1.75rem, 4vw, 2.5rem);
 }
@@ -839,6 +867,100 @@ button:focus-visible {
 
 .site-footer {
   line-height: 1.8;
+}
+
+.privacy-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(217, 166, 161, 0.2), transparent 28rem),
+    #f8f1e6;
+}
+
+.privacy-header {
+  border-bottom: 1px solid rgba(79, 111, 82, 0.18);
+  background: #4a382d;
+  color: #ffffff;
+}
+
+.privacy-brand {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.privacy-back-link {
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.privacy-back-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.privacy-content {
+  width: min(100% - 2rem, 54rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) 0;
+}
+
+.privacy-content h1,
+.privacy-content h2 {
+  font-family: var(--font-serif);
+  color: #4a382d;
+}
+
+.privacy-content h1 {
+  margin: 0.6rem 0 1rem;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 700;
+  line-height: 0.98;
+}
+
+.privacy-content h2 {
+  margin: 2.5rem 0 0.8rem;
+  font-size: clamp(1.65rem, 4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.privacy-content p,
+.privacy-content li {
+  line-height: 1.8;
+}
+
+.privacy-content p,
+.privacy-content ul {
+  margin: 0.7rem 0;
+}
+
+.privacy-content ul {
+  padding-left: 1.3rem;
+  list-style: disc;
+}
+
+.privacy-content a {
+  color: #3e6546;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.privacy-eyebrow {
+  color: #4f6f52;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.privacy-summary {
+  border: 1px solid rgba(79, 111, 82, 0.2);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 1.25rem;
 }
 
 .contact-section {
